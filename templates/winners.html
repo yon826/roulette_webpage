@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>당첨자 목록</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    table {
+      width: 100%;
+      max-width: 600px;
+      border-collapse: collapse;
+      margin: 0 auto;
+      background-color: white;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f3f4f6;
+    }
+
+    #load-more {
+      margin: 20px auto;
+      display: block;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #load-more:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .container {
+      padding: 20px;
+      text-align: center;
+    }
+
+    button.back-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #94a3b8;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🎉 당첨자 목록</h2>
+    <table id="log-table">
+      <thead>
+        <tr>
+          <th>이름</th>
+          <th>전화번호</th>
+          <th>상품</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <button id="load-more">더보기</button>
+    <br>
+    <button onclick="window.location.href='/'" class="back-btn">← 이벤트 페이지로 돌아가기</button>
+  </div>
+
+  <script>
+    let page = 1;
+    const tableBody = document.querySelector('#log-table tbody');
+    const loadMoreBtn = document.getElementById('load-more');
+
+    async function loadLogs() {
+      const res = await fetch(`/api/winners?page=${page}`);
+      const data = await res.json();
+      if (data.length === 0) {
+        loadMoreBtn.disabled = true;
+        loadMoreBtn.innerText = "더 이상 데이터 없음";
+        return;
+      }
+
+      data.forEach(log => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${log.name}</td><td>${log.phone}</td><td>${log.prize}</td>`;
+        tableBody.appendChild(tr);
+      });
+
+      page++;
+    }
+
+    loadMoreBtn.addEventListener('click', loadLogs);
+    window.onload = loadLogs;
+  </script>
+</body>
+</html>

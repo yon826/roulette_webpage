@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>룰렛 이벤트</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .input-row input {
+      flex: 1;
+      padding: 12px;
+      font-size: 16px;
+    }
+    #sendCodeBtn,
+    #verifyCodeBtn {
+      padding: 8px 12px;
+      font-size: 14px;
+      white-space: nowrap;
+      width: auto;
+    }
+    #surveyBtn {
+      padding: 6px 12px;
+      font-size: 14px;
+      width: auto;
+      max-width: 50%;
+    }
+    #closeBtn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <canvas id="myCanvas"></canvas>
+
+    <div class="container" style="max-width: 400px; margin: 0 auto; text-align: center;">
+      <h1>🎁 룰렛 이벤트 🎉</h1>
+
+      <div style="margin-bottom: 12px;">
+        <p><strong>주민총회 사전투표를 완료하셨나요?</strong><br>
+        <small> 사전투표에 참여해 주신 주민분들께 소소한 선물을 드립니다.</small></p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+        <form id="spin-form" style="width: 100%; padding: 0 12px; box-sizing: border-box;">
+          <input type="text" id="nameInput" placeholder="이름(홍길동)" required>
+          <div class="input-row">
+            <input type="text" id="phoneInput" placeholder="전화번호(01012345678)" required>
+            <button type="button" id="sendCodeBtn">인증번호 받기</button>
+          </div>
+          <div class="input-row">
+            <input type="text" id="codeInput" placeholder="인증번호 입력">
+            <button type="button" id="verifyCodeBtn">인증번호 확인</button>
+          </div>
+          <button type="submit" id="spinBtn" class="disabled">룰렛 돌리기</button>
+        </form>
+      <!-- 당첨자 목록 보기 버튼 -->
+      <a href="/winners" style="display: inline-block; margin-top: 20px; text-decoration: none;">
+        <button>🎯 당첨자 목록 보기</button>
+      </a>
+
+        <div style="margin-top: 30px; text-align: center; position: relative;">
+          <canvas id="wheelCanvas" width="300" height="300" style="border: 2px solid #999; border-radius: 50%; background-color: #fff;"></canvas>
+          <div style="position: absolute; top: -28px; left: 50%; transform: translateX(-50%) rotate(180deg); font-size: 24px;">▲</div>
+          <div id="result" style="margin-top: 10px;"></div>
+        </div>
+      </div>
+
+      <!-- ✅ 모달 팝업 -->
+      <div id="resultModal" style="display: none; position: fixed; top: 0; left: 0;
+        width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);
+        justify-content: center; align-items: center; z-index: 1000;">
+        <div style="background: white; padding: 20px; border-radius: 12px; max-width: 90%; text-align: center;">
+          <h2>🎉 당첨을 축하합니다!</h2>
+          <p id="modalPrizeText"></p>
+          <img id="modalPrizeImage" src="" alt="당첨 이미지" style="max-width: 100%; border-radius: 10px; margin: 10px 0;">
+          <p style="font-size: 14px; margin-top: 10px;">이미지 다운로드 버튼을 눌러<br>교환처에서 상품을 수령하세요</p>
+          <a id="downloadLink" download style="display: inline-block; margin: 10px 0; padding: 10px 20px;
+                    background: #3b82f6; color: white; border-radius: 8px; text-decoration: none;">
+            이미지 다운로드
+          </a><br>
+          <button id="closeBtn" disabled style="margin-top: 10px;">닫기</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="/static/js/roulette.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head><title>관리자 페이지</title></head>
+<body>
+  <h2>당첨 통계</h2>
+  <ul>
+    {% for prize, count in stats.items() %}
+      <li>{{ prize }}: {{ count }}개</li>
+    {% endfor %}
+  </ul>
+
+  <h3>수령자 목록</h3>
+
+  <a href="/download/excel" download>
+    <button style="margin-top: 20px;">🎯 엑셀 파일 다운로드</button>
+  </a>
+
+  <table border="1">
+    <tr><th>이름</th><th>전화 뒷자리</th><th>상품</th><th>일련번호</th></tr>
+    {% for log in logs %}
+      <tr>
+        <td>{{ log.name }}</td>
+        <td>{{ log.phone }}</td>
+        <td>{{ log.prize }}</td>
+        <td>{{ log.serial }}</td>
+      </tr>
+    {% endfor %}
+
+  </table>
+
+  <form id="clear-form">
+    <button type="submit" style="margin-top:20px; background:red; color:white;">모든 로그 및 이미지 삭제</button>
+  </form>
+
+  <script>
+    document.getElementById('clear-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      if (!confirm("정말로 모든 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.")) return;
+
+      const response = await fetch('/admin/clear', {
+        method: 'POST'
+      });
+
+      const result = await response.json();
+      if (result.status === 'success') {
+        alert('삭제가 완료되었습니다.');
+        window.location.reload();
+      } else {
+        alert('삭제 중 오류 발생');
+      }
+    });
+  </script>
+
+</body>
+</html>
